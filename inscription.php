@@ -27,7 +27,10 @@ include_once('./inc/header.php')
         }
         $cryptedpass=password_hash($password,PASSWORD_BCRYPT);
         $test=password_verify($password2,$cryptedpass);
-        if( password_verify($password2,$cryptedpass) && strlen($login)>0){
+        $req = "SELECT `login` FROM `utilisateurs` WHERE `login`='{$login}'";
+        $query = mysqli_query($db, $req);
+        $checklogin=mysqli_fetch_assoc($query);
+        if( $checklogin==null && password_verify($password2,$cryptedpass) && strlen($login)>0){
             $req="INSERT INTO `utilisateurs`(`login`,`password`)VALUES ('{$login}','{$cryptedpass}')";
             $query=mysqli_query($db,$req);
             header("Location:connexion.php");
